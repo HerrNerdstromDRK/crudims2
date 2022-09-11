@@ -1,0 +1,28 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-crudims2-dev-143124-authRole",
+      "UnauthRoleArn": "arn:aws:iam::813913549924:role/amplify-crudims2-dev-143124-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::813913549924:role/amplify-crudims2-dev-143124-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-crudims2-dev-143124-deployment",
+      "UnauthRoleName": "amplify-crudims2-dev-143124-unauthRole",
+      "StackName": "amplify-crudims2-dev-143124",
+      "StackId": "arn:aws:cloudformation:us-east-2:813913549924:stack/amplify-crudims2-dev-143124/539eda00-3208-11ed-91d0-0a88d3298b16",
+      "AmplifyAppId": "d3pwclqm1pj7uv",
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-crudims2-dev-143124-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
+    },
+    "categories": {
+      "auth": {
+        "crudims29ef66cf7": {},
+        "true": {}
+      },
+      "function": {
+        "crudims224a68571": {
+          "deploymentBucketName": "amplify-crudims2-dev-143124-deployment",
+          "s3Key": "amplify-builds/crudims224a68571-4277796b474466306a74-build.zip"
+        }
+      }
+    }
+  }
+}

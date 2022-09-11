@@ -1,0 +1,10 @@
+{
+  "resourceName": "crudims2dynamodb",
+  "tableName": "crudims2dynamodb",
+  "partitionKey": {
+    "fieldName": "id",
+    "fieldType": "string"
+  },
+  "gsi": [],
+  "triggerFunctions": []
+}
