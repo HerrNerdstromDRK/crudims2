@@ -127,9 +127,35 @@ export default function Home() {
         (item) => item.name !== "" && item.description !== ""
       )
     );
+    //  console.log(
+    //  "fetchInventoryItems> JSON.stringify( apiData ):  " +
+    //  JSON.stringify(inventoryItemsFromAPI)
+    //);
+  }
+
+  /**
+   * Retrieve an inventoryItem by id from the API and display to the user.
+   */
+  async function fetchInventoryItemById(searchId) {
+    //    console.log("fetchInventoryItemById");
+
+    const inventoryItemFromAPI = await API.get(
+      apiName,
+      apiDirectory + "/object/" + searchId
+    )
+      .then((result) => {
+        // console.log(  "fetchInventoryItemById> result: " + JSON.stringify(result));
+      })
+      .catch((err) => {
+        console.log("fetchInventoryItemById> error: " + err);
+      });
+
+    // Add the new inventory item to the inventoryItems array
+    inventoryItems.push(inventoryItemFromAPI);
+
     console.log(
-      "fetchInventoryItems> JSON.stringify( apiData ):  " +
-        JSON.stringify(inventoryItemsFromAPI)
+      "fetchInventoryItemById> JSON.stringify( inventoryItemFromAPI ):  " +
+        JSON.stringify(inventoryItemFromAPI)
     );
   }
 
@@ -282,6 +308,12 @@ export default function Home() {
       return;
     }
 
+    // Note: I tried for three days to get the REST API delete function to work
+    // properly but to no avail. I'm convinced it must be a bug in AWS.
+    // Workaround here is to clear the name and description and only show items
+    // that have non-empty name and description. This leads to some db pollution,
+    // but that can be worked around by setting time to live. Bummer I couldn't
+    // get this to work, but stress level is lower knowing a workaround is in place.
     const params = {
       id: inventoryItemToDelete.id,
       name: "",
@@ -294,11 +326,18 @@ export default function Home() {
       apiDirectory, //+ "/object/" + inventoryItemToDelete.id,
       { body: params }
     )
+      /*    await API.del(
+      apiName,
+      apiDirectory + "/object/" + inventoryItemToDelete.id,
+      {
+        key: inventoryItemToDelete.id,
+      }
+    )*/
       .then((result) => {
-        // console.log("deleteInventoryItem> result: " + JSON.stringify(result));
+        //console.log("deleteInventoryItem> result: " + JSON.stringify(result));
       })
       .catch((err) => {
-        //  console.log("deleteInventoryItem> error: " + JSON.stringify(err));
+        //console.log("deleteInventoryItem> error: " + JSON.stringify(err));
       });
 
     // Refresh the local inventory items array and update the GUI
@@ -306,9 +345,16 @@ export default function Home() {
 
     // If the inventory item just erased was also being viewed, then reset
     // the local tracker of the viewed inventory item
-    if (inventoryItemToDelete.id === updateId) {
+    if (
+      viewInventoryItem &&
+      viewInventoryItem.id === inventoryItemToDelete.id
+    ) {
       setViewInventoryItem([]);
+    }
 
+    // If the inventory item just erased was also being update, then reset
+    // the local tracker of the update inventory item
+    if (inventoryItemToDelete.id === updateId) {
       // Clear Id of the inventoryItem being updated
       setUpdateId("");
 
