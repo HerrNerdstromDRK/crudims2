@@ -127,10 +127,10 @@ export default function Home() {
         (item) => item.name !== "" && item.description !== ""
       )
     );
-    //  console.log(
-    //  "fetchInventoryItems> JSON.stringify( apiData ):  " +
-    //  JSON.stringify(inventoryItemsFromAPI)
-    //);
+    console.log(
+      "fetchInventoryItems> JSON.stringify( apiData ):  " +
+        JSON.stringify(inventoryItemsFromAPI)
+    );
   }
 
   /**
@@ -139,9 +139,14 @@ export default function Home() {
   async function fetchInventoryItemById(searchId) {
     //    console.log("fetchInventoryItemById");
 
+    const searchParams = {
+      id: searchId,
+    };
+
     const inventoryItemFromAPI = await API.get(
       apiName,
-      apiDirectory + "/object/" + searchId
+      apiDirectory + "/object/:id",
+      { body: searchParams }
     )
       .then((result) => {
         // console.log(  "fetchInventoryItemById> result: " + JSON.stringify(result));
@@ -256,11 +261,10 @@ export default function Home() {
       createdAt: oldInventoryItem.createdAt,
     };
     console.log(
-      "updateInventoryItem> Going to post, restData: " +
-        JSON.stringify(restData)
+      "updateInventoryItem> Going to put, restData: " + JSON.stringify(restData)
     );
 
-    await API.post(apiName, apiDirectory, { body: restData })
+    await API.put(apiName, apiDirectory, { body: restData })
       .then((result) => {
         console.log("updateInventoryItem> result: " + JSON.stringify(result));
       })
@@ -291,10 +295,10 @@ export default function Home() {
    * Delete the inventory item represented by the given id
    */
   async function deleteInventoryItem(inventoryItemToDelete) {
-    //    console.log(
-    //    "deleteInventoryItem> inventoryItemToDelete: " +
-    //    JSON.stringify(inventoryItemToDelete)
-    //);
+    console.log(
+      "deleteInventoryItem> inventoryItemToDelete: " +
+        JSON.stringify(inventoryItemToDelete)
+    );
     if (
       !isAuthenticated() ||
       user.getUsername() !== inventoryItemToDelete.createdBy
@@ -314,30 +318,30 @@ export default function Home() {
     // that have non-empty name and description. This leads to some db pollution,
     // but that can be worked around by setting time to live. Bummer I couldn't
     // get this to work, but stress level is lower knowing a workaround is in place.
-    const params = {
+    const delParams = {
       id: inventoryItemToDelete.id,
       name: "",
       description: "",
     };
 
-    // Remove the inventory item from the database back
+    // Remove the inventory item from the database backend
+    /*const id = inventoryItemToDelete.id;
+    await API.del(apiName, apiDirectory + "/:id", {
+      //      await API.del(apiName, `/items/object/${id}`, {
+      params: delParams,
+    })*/
+
     await API.post(
       apiName,
       apiDirectory, //+ "/object/" + inventoryItemToDelete.id,
-      { body: params }
+      { body: delParams }
     )
-      /*    await API.del(
-      apiName,
-      apiDirectory + "/object/" + inventoryItemToDelete.id,
-      {
-        key: inventoryItemToDelete.id,
-      }
-    )*/
+
       .then((result) => {
-        //console.log("deleteInventoryItem> result: " + JSON.stringify(result));
+        console.log("deleteInventoryItem> result: " + JSON.stringify(result));
       })
       .catch((err) => {
-        //console.log("deleteInventoryItem> error: " + JSON.stringify(err));
+        console.log("deleteInventoryItem> error: " + JSON.stringify(err));
       });
 
     // Refresh the local inventory items array and update the GUI
