@@ -312,7 +312,7 @@ export default function Home() {
       return;
     }
 
-    // Note: I tried for three days to get the REST API delete function to work
+    // Note: I tried for four days to get the REST API delete function to work
     // properly but to no avail. I'm convinced it must be a bug in AWS.
     // Workaround here is to clear the name and description and only show items
     // that have non-empty name and description. This leads to some db pollution,
@@ -325,18 +325,7 @@ export default function Home() {
     };
 
     // Remove the inventory item from the database backend
-    /*const id = inventoryItemToDelete.id;
-    await API.del(apiName, apiDirectory + "/:id", {
-      //      await API.del(apiName, `/items/object/${id}`, {
-      params: delParams,
-    })*/
-
-    await API.post(
-      apiName,
-      apiDirectory, //+ "/object/" + inventoryItemToDelete.id,
-      { body: delParams }
-    )
-
+    await API.post(apiName, apiDirectory, { body: delParams })
       .then((result) => {
         console.log("deleteInventoryItem> result: " + JSON.stringify(result));
       })
